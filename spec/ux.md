@@ -1,5 +1,7 @@
 ## UX Spec
 
+The goal of this project is to create a simple and easy to use application that allows users to search for mp3s and download them from a central file tracker. Should be close to how napster looked in 1990s
+
 ## Design
 
 **Inspiration board:**
