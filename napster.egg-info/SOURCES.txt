@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+napster/app.py
+napster/client.py
+napster/download_manager.py
+napster/messages.py
+napster/mp3_file.py
+napster/server.py
+napster/udp.py
+napster.egg-info/PKG-INFO
+napster.egg-info/SOURCES.txt
+napster.egg-info/dependency_links.txt
+napster.egg-info/top_level.txt
