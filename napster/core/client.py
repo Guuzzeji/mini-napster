@@ -1,20 +1,17 @@
 from datetime import datetime
 import threading
-import atexit
 
 from napster.core.udp.download_manager import DownloadManager
 from napster.core.udp.udp import UDPClient
-from napster.core.singleton import SingletonManager
+from napster.core.singleton import SingletonManager, UDP_IP, UDP_PORT
 from napster.core.udp.messages import WantMsg, EndMsg, DataWantMsg
 
-class NapsterClient:
-    def __init__(self, UDPClient: UDPClient, DownloadManager: DownloadManager) -> None:
-        self.upd_client = UDPClient
+class NapsterClient(UDPClient):
+    def __init__(self, target_ip: str, target_port: int, username: str, DownloadManager: DownloadManager) -> None:
+        UDPClient.__init__(self, target_ip, target_port)
+        self.username = username
         self.download_manager = DownloadManager
-        self.upd_client.start_receiver(self.handle_message)
-        self.threads = []
-        self.thread_kill_event = threading.Event()
-        atexit.register(self.cleanup) # clean up threads on exit
+        self.start_receiver(self.handle_message)
         self.handle_downloads()
 
     def handle_message(self, message, addr):
@@ -44,20 +41,21 @@ class NapsterClient:
 
             if self.download_manager.get_number_of_chunks_saved(data_msg.file_name) == self.download_manager.get_total_number_of_chunks(data_msg.file_name, data_msg.file_id):
                 print(f"File {data_msg.file_name} is complete")
-                self.upd_client.send_message(str(EndMsg(file_name=data_msg.file_name)))
+                self.send_message(str(EndMsg(file_name=data_msg.file_name)))
                 self.download_manager.assemble_file(data_msg.file_name, data_msg.file_id)
 
-            print(
-                f"Received DATA message | chunk index: {message[1].chunk_index} out of {self.download_manager.get_number_of_chunks_saved(message[1].file_name)} / {self.download_manager.get_total_number_of_chunks(message[1].file_name, message[1].file_id)}")
+            if self.download_manager.get_total_number_of_chunks(data_msg.file_name, data_msg.file_id):
+                print(
+                    f"Received DATA message | chunk index: {message[1].chunk_index} out of {self.download_manager.get_number_of_chunks_saved(message[1].file_name)} / {self.download_manager.get_total_number_of_chunks(message[1].file_name, message[1].file_id)}")
 
-    def download_file(self, file_name: str, username: str, file_id: str, checksum: str):
-        self.upd_client.send_message(
+    def download_file(self, file_name: str, file_id: str, checksum: str):
+        self.send_message(
             str(
                 WantMsg(
                     file_id=file_id,
                     checksum=checksum,
                     file_name=file_name,
-                    username=username
+                    username=self.username
                     )
                 )
             )
@@ -76,7 +74,7 @@ class NapsterClient:
                             self.download_manager.manager[file]["last_blast"] = datetime.now()
                             self.download_manager.manager[file]["just_created"] = False
                             for chunk in missing_chunks:
-                                self.upd_client.send_message(str(DataWantMsg(chunk_index=chunk, file_name=file_name, file_id=file_id)))
+                                self.send_message(str(DataWantMsg(chunk_index=chunk, file_name=file_name, file_id=file_id)))
                     except Exception as e:
                         continue
             print("UDP client download handler thread ended")
@@ -86,15 +84,10 @@ class NapsterClient:
         thread.start()
         self.threads.append(thread)
 
-    def cleanup(self):
-        self.thread_kill_event.set() # signal threads to exit
-        for thread in self.threads:
-            thread.join()
 
 
-
-client = NapsterClient(SingletonManager.UDPClient_instance, SingletonManager.DownloadManager_instance)
-client.download_file("SpotiDown.App - Fighting My Demons - Ken Carson.mp3", "test", "test", "test")
+client = NapsterClient(UDP_IP, UDP_PORT, "test-client", SingletonManager.DownloadManager_instance)
+client.download_file("SpotiDown.App - Fighting My Demons - Ken Carson.mp3", "test", "test")
 
 while True:
     pass

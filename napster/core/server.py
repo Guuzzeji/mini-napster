@@ -3,14 +3,16 @@ from time import sleep
 
 from napster.core.udp.sharing_files_manager import SharingFilesManager
 from napster.core.udp.udp import UDPServer
-from napster.core.singleton import SingletonManager
+from napster.core.singleton import SingletonManager, UDP_IP, UDP_PORT
 from napster.core.udp.messages import DataMsg, MetadataMsg
 
-class NapsterServer:
-    def __init__(self, UDPServer: UDPServer, SharingFilesManager: SharingFilesManager):
+class NapsterServer(UDPServer):
+    def __init__(self, ip: str, port: int, username: str, SharingFilesManager: SharingFilesManager):
+        UDPServer.__init__(self, ip, port)
         self.UDPServer_instance = UDPServer
         self.SharingFilesManager_instance = SharingFilesManager
-        self.UDPServer_instance.start(self.handle_message)
+        self.username = username
+        self.start(self.handle_message)
     
     def handle_message(self, sock: socket.socket, message, addr):
         print("(server) received message: %s from %s" % (message, addr))
@@ -21,8 +23,8 @@ class NapsterServer:
             meta_data = self.SharingFilesManager_instance.get_metadata(addr)
             if meta_data is not None:
                 metadata_msg = MetadataMsg(
-                    username="test", 
-                    file_id="test",
+                    username=self.username, 
+                    file_id="test", # TODO CHANGE THIS LATER, verify file id from main server
                     file_name=message[1].file_name, 
                     chunks=meta_data["number_of_chunks"], 
                     chunk_size=meta_data["checksum"])
@@ -38,6 +40,7 @@ class NapsterServer:
             if chunk is None:
                 return
             
+            # TODO CHANGE THIS LATER, verify file id from main server
             data_msg = DataMsg(file_id="test", file_name=file_name, chunk_index=message_index, checksum=len(chunk), base64_chunk=chunk)
             sock.sendto(str(data_msg).encode('utf-8'), addr)
 
@@ -49,7 +52,7 @@ class NapsterServer:
             print(f"Client at {addr} ended the download")
             self.SharingFilesManager_instance.remove_client(addr)
 
-NapsterServer(SingletonManager.UDPServer_instance, SingletonManager.SharingFilesManager_instance)
+NapsterServer(UDP_IP, UDP_PORT, "test-server", SingletonManager.SharingFilesManager_instance)
 
 while True:
     sleep(1)
