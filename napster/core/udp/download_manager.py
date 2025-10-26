@@ -37,6 +37,8 @@ class DownloadManager:
     
     def get_total_number_of_chunks(self, file_name: str, uuid: str):
         with self.thread_lock:
+            if f"{uuid}||{file_name}" not in self.manager:
+                return None
             return self.manager[f"{uuid}||{file_name}"].get("total_chunks", None)
 
     def add_file_metadata(self, uuid: str, file_name: str, username, number_of_chunks: int, checksum: str, server: tuple):
