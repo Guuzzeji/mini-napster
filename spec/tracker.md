@@ -53,3 +53,9 @@ This will be done via a simple REST API that will be used to upload mp3 metadata
   - This is used to download mp3s from the central file tracker
   - i.e /download?id=id
   - RETURN: 200 OK and the port and ip of the user that has the mp3, as well as the checksum of the mp3
+
+**Resources:**
+
+- Feel free to use whatever framework you want. But for speed try using flask or express
+- Also please put the code in a separate folder called "nap-central-tracker"
+- And use docker to manage everything
