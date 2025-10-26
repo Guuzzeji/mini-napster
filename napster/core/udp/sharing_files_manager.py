@@ -6,7 +6,7 @@ class SharingFilesManager:
         self.db_manager = db_manager_instance
 
     def add_client(self, client, uuid: str, file_name: str, username: str):
-        ttl = str(10)
+        ttl = str(10) # this is for testing currently not being used
         self.db_manager.insert_sharing_table(uuid, file_name, username, ttl, client[0], client[1])
 
     def remove_client(self, client):

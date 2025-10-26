@@ -13,7 +13,7 @@ class FileManager():
     
     def __put_file_into_db(self, full_file_path: str):
         mp3_file = Mp3File(full_file_path)
-        test_id = "test"
+        test_id = "test" # TODO CHANGE THIS
         self.db_manager.insert_shared_table(test_id, mp3_file.checksum, mp3_file.file_name, full_file_path, mp3_file.total_chunks)
 
     def __check_sharing_folder(self):
