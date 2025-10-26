@@ -57,7 +57,7 @@ class DownloadManager:
             }
 
     def add_chunk(self, uuid: str, file_name: str, checksum: int, chunk_index: int, base64_chunk: str):
-        if self.file_exists(file_name, uuid) is False:
+        if self.file_exists(file_name, uuid) is False or f"{uuid}||{file_name}" not in self.manager:
             return
         
         if checksum != len(base64_chunk):
