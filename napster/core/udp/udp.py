@@ -1,8 +1,10 @@
+import random
 import socket
 import threading
 import atexit
 
-from napster.core.messages import ConvertToMessageType, MESSAGE_SIZE
+from napster.core.constants import MESSAGE_SIZE
+from napster.core.udp.messages import ConvertToMessageType
 
 
 class UDPServer:
@@ -24,14 +26,16 @@ class UDPServer:
             while self.thread_kill_event.is_set() is False:
                 if self.message_queue:
                     with self.queue_lock:
-                        message = self.message_queue.pop(0)
+                        idx = random.randint(0, len(self.message_queue) - 1)
+                        message = self.message_queue.pop(idx)
                     func(self.sock, message[0], message[1])
             print("UDP server message handler thread ended")
 
         thread = threading.Thread(target=process_queue, daemon=True)
-        thread.name = "UDPServerMessageHandlerThread"
+        thread.name = f"UDPServerMessageHandlerThread"
         thread.start()
-        self.threads.append(thread) 
+        self.threads.append(thread)
+
 
     def __run_receiver(self):
         def run():
@@ -87,8 +91,9 @@ class UDPClient:
             while self.thread_kill_event.is_set() is False:
                 if self.message_queue:
                     with self.queue_lock:
-                        message = self.message_queue.pop(0)
-                    func(self.sock, message[0], message[1])
+                        idx = random.randint(0, len(self.message_queue) - 1)
+                        message = self.message_queue.pop(idx)
+                    func(message[0], message[1])
             print("UDP client message handler thread ended")
 
         thread = threading.Thread(target=process_queue, daemon=True)

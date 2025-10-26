@@ -1,1 +1,0 @@
-BASE_EVERYTHING_FOLDER = "nap-data"

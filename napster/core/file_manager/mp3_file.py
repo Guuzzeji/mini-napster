@@ -6,8 +6,8 @@ import base64
 
 # compress file and save into chunks in folder 'chunks' -> "chunks/file_name/chunk_index.chunk"
 
-from napster.core.messages import MESSAGE_SIZE
-from napster.core.folder_struct import BASE_EVERYTHING_FOLDER
+from napster.core.file_manager.folder_struct import create_base_folder
+from napster.core.constants import MESSAGE_SIZE, BASE_EVERYTHING_FOLDER
 
 
 CHUNK_FOLDER_BASE = BASE_EVERYTHING_FOLDER + "/sharing/chunks"
@@ -20,7 +20,7 @@ class Mp3File:
         
         with open(full_file_path, 'rb') as f:
             data_raw = f.read()
-            self.checksum = hashlib.md5(data_raw).hexdigest()
+            self.checksum = str(hashlib.md5(data_raw).hexdigest())
 
         # File info
         self.file_name = os.path.basename(full_file_path)
@@ -43,6 +43,7 @@ class Mp3File:
                     f.write(base64.b64encode(chunk_data))
     
     def __chunk_folder_exist(self):
+        create_base_folder()
         if not os.path.exists(CHUNK_FOLDER_BASE + "/" + self.name):
             os.makedirs(CHUNK_FOLDER_BASE + "/" + self.name)
             self.__create_chunks()
