@@ -22,14 +22,14 @@ class UDPServer:
 
     def __handle_message_queue(self, func):
         def process_queue():
-            print("UDP server message handler thread started")
+            # print("UDP server message handler thread started")
             while self.thread_kill_event.is_set() is False:
                 if self.message_queue:
                     with self.queue_lock:
                         idx = random.randint(0, len(self.message_queue) - 1)
                         message = self.message_queue.pop(idx)
                     func(self.sock, message[0], message[1])
-            print("UDP server message handler thread ended")
+            # print("UDP server message handler thread ended")
 
         thread = threading.Thread(target=process_queue, daemon=True)
         thread.name = f"UDPServerMessageHandlerThread"
@@ -40,7 +40,7 @@ class UDPServer:
     def __run_receiver(self):
         def run():
             self.sock.bind((self.host, self.port))
-            print(f"UDP server listening on {self.host}:{self.port}")
+            # print(f"UDP server listening on {self.host}:{self.port}")
             while self.thread_kill_event.is_set() is False:
                 try:
                     # buffer size is MESSAGE_SIZE + some extra
@@ -50,7 +50,7 @@ class UDPServer:
                         self.message_queue.append((self.converter.parse_message(message), addr))
                 except socket.error:
                     pass
-            print("UDP server receiver thread exiting")
+            # print("UDP server receiver thread exiting")
 
         thread = threading.Thread(target=run, daemon=True)
         thread.name = "UDPServerReceiverThread"
@@ -87,14 +87,14 @@ class UDPClient:
 
     def __handle_message_queue(self, func):
         def process_queue():
-            print("UDP client message handler thread started")
+            # print("UDP client message handler thread started")
             while self.thread_kill_event.is_set() is False:
                 if self.message_queue:
                     with self.queue_lock:
                         idx = random.randint(0, len(self.message_queue) - 1)
                         message = self.message_queue.pop(idx)
                     func(message[0], message[1])
-            print("UDP client message handler thread ended")
+            # print("UDP client message handler thread ended")
 
         thread = threading.Thread(target=process_queue, daemon=True)
         thread.name = "UDPClientMessageHandlerThread"

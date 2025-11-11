@@ -61,7 +61,7 @@ class DownloadManager:
             return
         
         if checksum != len(base64_chunk):
-            print("Checksum does not match", checksum, len(base64_chunk))
+            # ("Checksum does not match", checksum, len(base64_chunk))
             return
 
         self.__create_download_folder(file_name)
