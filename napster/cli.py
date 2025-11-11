@@ -20,21 +20,30 @@ print(f"== Welcome {username} | IP: {ip} | Port: {port} ==\n")
 server = NapsterServer(ip, int(port), username, SingletonManager.SharingFilesManager_instance)
 
 while True:
-    command_input = input("> ").split(" ")
+    """
+    NOTE: All commands are store in the commands folder, please add your own commands there
+    """
+    command_input = input("> ").split(" ") # split commands by spaces to get different input
     command = command_input[0]
 
     match command:
         case "lr" | "leechers":
+            # TODO: implement leechers, get the usernames and files people are downloading, print it as a table
             pass
         case "clear" | "cls":
             clear()
         case "sdl" | "shared_list":
             check_sharing()
         case "dl" | "download":
+            # TODO: implement download command, so people can download a file base on specified id, ip, and port
+            # i.e download <ip> <port> <file-id>
             pass
         case "dls" | "downloads":
+            # TODO: implement downloads command, so people can see all the files they are currently downloading
+            # NOTE: This should put into a thread pool for downloading multiple files
             pass
         case "help":
+            # TODO: implement help command, just list all the commands available
             pass
         case "exit":
             break
