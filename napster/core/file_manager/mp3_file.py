@@ -26,10 +26,10 @@ class Mp3File:
         self.file_name = os.path.basename(full_file_path)
         self.duration = self.tinytag.duration
         self.size = os.path.getsize(full_file_path)
-        self.album = self.tinytag.album[0]
-        self.title = self.tinytag.title[0]
-        self.artist = self.tinytag.artist[0]
-        self.year = self.tinytag.year[0]
+        self.album = self.tinytag.album[0] if self.tinytag.album else "unknown"
+        self.title = self.tinytag.title[0] if self.tinytag.title else "unknown"
+        self.artist = self.tinytag.artist[0] if self.tinytag.artist else "unknown"
+        self.year = self.tinytag.year[0] if self.tinytag.year else 0
         self.total_chunks = math.ceil(self.size / MESSAGE_SIZE)
 
     def __create_chunks(self):
