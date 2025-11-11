@@ -1,4 +1,5 @@
 import os
+import uuid
 from napster.core.database.db_manager import DBManager
 from napster.core.file_manager.folder_struct import BASE_EVERYTHING_FOLDER, create_base_folder
 from napster.core.file_manager.mp3_file import Mp3File
@@ -13,8 +14,8 @@ class FileManager():
     
     def __put_file_into_db(self, full_file_path: str):
         mp3_file = Mp3File(full_file_path)
-        test_id = "test" # TODO CHANGE THIS
-        self.db_manager.insert_shared_table(test_id, mp3_file.checksum, mp3_file.file_name, full_file_path, mp3_file.total_chunks)
+        file_id = str(uuid.uuid4()) # TODO FIX THIS AND PULL FROM SERVER
+        self.db_manager.insert_shared_table(file_id, mp3_file.checksum, mp3_file.file_name, full_file_path, mp3_file.total_chunks)
 
     def __check_sharing_folder(self):
         if not os.path.exists(SHARING_FOLDER):

@@ -15,10 +15,10 @@ class NapsterServer(UDPServer):
         self.start(self.handle_message)
     
     def handle_message(self, sock: socket.socket, message, addr):
-        print("(server) received message: %s from %s" % (message, addr))
+        # print("(server) received message: %s from %s" % (message, addr))
 
         if message[0] == "WANT":
-            print(f"Client at {addr} wants file {message[1].file_id} with checksum {message[1].checksum}")
+            # print(f"Client at {addr} wants file {message[1].file_id} with checksum {message[1].checksum}")
             self.SharingFilesManager_instance.add_client(addr, message[1].file_id, message[1].file_name, message[1].username)
             meta_data = self.SharingFilesManager_instance.get_metadata(addr)
             if meta_data is not None:
@@ -34,7 +34,7 @@ class NapsterServer(UDPServer):
             message_index = message[1].chunk_index
             file_name = message[1].file_name
             client = addr
-            print(f"Client at {addr} wants data chunk {message_index}")
+            # print(f"Client at {addr} wants data chunk {message_index}")
             chunk = self.SharingFilesManager_instance.send_chunk(client, message_index)
             
             if chunk is None:
@@ -49,10 +49,5 @@ class NapsterServer(UDPServer):
                 return
 
         if message[0] == "END":
-            print(f"Client at {addr} ended the download")
+            # print(f"Client at {addr} ended the download")
             self.SharingFilesManager_instance.remove_client(addr)
-
-NapsterServer(UDP_IP, UDP_PORT, "test-server", SingletonManager.SharingFilesManager_instance)
-
-while True:
-    sleep(1)

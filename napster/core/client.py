@@ -85,10 +85,3 @@ class NapsterClient(UDPClient):
         self.threads.append(thread)
 
 
-
-client = NapsterClient(UDP_IP, UDP_PORT, "test-client", SingletonManager.DownloadManager_instance)
-client.download_file("SpotiDown.App - Fighting My Demons - Ken Carson.mp3", "test", "test")
-
-while True:
-    pass
-
