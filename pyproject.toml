@@ -2,3 +2,5 @@
 name = "napster"
 version = "0.1.0"
 description = "Mini version of napster"
+[tool.setuptools]
+packages = ["napster"]

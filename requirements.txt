@@ -1,3 +1,3 @@
--e git+https://github.com/Guuzzeji/mini-napster@bbabbdca6637300b4f627c066e2266720adf58f3#egg=napster
+-e .
 pyfiglet==1.0.4
 tinytag==2.1.2

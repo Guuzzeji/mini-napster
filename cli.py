@@ -7,6 +7,7 @@ from napster.core.server import NapsterServer
 
 from napster.commands.check_sharing import check_sharing
 from napster.commands.clear import clear
+from napster.commands.download import download
 
 f = Figlet(font='slant')
 print(f.renderText('Mini Napster'))
@@ -18,6 +19,9 @@ print(f"== Welcome {username} | IP: {ip} | Port: {port} ==\n")
 
 # Run server
 server = NapsterServer(ip, int(port), username, SingletonManager.SharingFilesManager_instance)
+
+# Store active download clients
+download_clients = []
 
 while True:
     """
@@ -35,9 +39,19 @@ while True:
         case "sdl" | "shared_list":
             check_sharing()
         case "dl" | "download":
-            # TODO: implement download command, so people can download a file base on specified id, ip, and port
-            # i.e download <ip> <port> <file-id>
-            pass
+            # Usage: download <ip> <port> <file-id> <filename> [checksum]
+            if len(command_input) < 5:
+                print("Usage: download <ip> <port> <file-id> <filename> [checksum]")
+                print("Example: download 127.0.0.1 5005 abc-123 song.mp3")
+            else:
+                target_ip = command_input[1]
+                target_port = int(command_input[2])
+                file_id = command_input[3]
+                file_name = command_input[4]
+                checksum = command_input[5] if len(command_input) > 5 else ""
+
+                client = download(username, target_ip, target_port, file_id, file_name, checksum)
+                download_clients.append(client)  # Keep client alive
         case "dls" | "downloads":
             # TODO: implement downloads command, so people can see all the files they are currently downloading
             # NOTE: This should put into a thread pool for downloading multiple files
