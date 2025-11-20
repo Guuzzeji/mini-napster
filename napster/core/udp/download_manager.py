@@ -59,17 +59,24 @@ class DownloadManager:
     def add_chunk(self, uuid: str, file_name: str, checksum: int, chunk_index: int, base64_chunk: str):
         if self.file_exists(file_name, uuid) is False or f"{uuid}||{file_name}" not in self.manager:
             return
-        
+
         if checksum != len(base64_chunk):
             # ("Checksum does not match", checksum, len(base64_chunk))
             return
 
         self.__create_download_folder(file_name)
-        with open(DOWNLOAD_FOLDER + "/" + file_name.replace(".mp3", "") + "/" + str(chunk_index) + ".chunk", "w") as f:
+        chunk_path = DOWNLOAD_FOLDER + "/" + file_name.replace(".mp3", "") + "/" + str(chunk_index) + ".chunk"
+
+        # Check if chunk already exists to avoid double-counting
+        chunk_already_exists = os.path.exists(chunk_path)
+
+        with open(chunk_path, "w") as f:
             f.write(base64_chunk)
 
-        with self.thread_lock:
-            self.manager[f"{uuid}||{file_name}"]["downloaded_chunks"] += 1
+        # Only increment counter if this is a new chunk
+        if not chunk_already_exists:
+            with self.thread_lock:
+                self.manager[f"{uuid}||{file_name}"]["downloaded_chunks"] += 1
 
     def is_file_complete(self, file_name: str, uuid: str) -> bool:
         number_of_chunks = self.get_number_of_chunks_saved(file_name)
