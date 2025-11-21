@@ -1,13 +1,17 @@
 from flask import Flask, jsonify, request
 import uuid
-from datetime import datetime
+import sys
 
 app = Flask(__name__)
 
 files = {}
 file_to_users = {}
 
-DEFAULT_SERVER_PORT = 5000
+if len(sys.argv) > 1:
+    SERVER_PORT = int(sys.argv[1])
+else:
+    SERVER_PORT = 5000
+
 
 @app.route('/user/upload-metadata', methods=['POST'])
 def upload_metadata():
@@ -94,4 +98,5 @@ def get_download_info():
     }, 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    print(f"Starting Tracker Server on port {SERVER_PORT}")
+    app.run(host='0.0.0.0', port=SERVER_PORT, debug=True)
