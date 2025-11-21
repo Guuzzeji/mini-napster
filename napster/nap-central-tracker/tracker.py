@@ -4,25 +4,10 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-users = {}
 files = {}
 file_to_users = {}
 
-def is_user_online(user):
-    """Check if user was active in the last 60 seconds"""
-    return (datetime.now() - user['last_checkin']).total_seconds() < 60
-
-@app.route('/user/checkin', methods=['POST'])
-def user_checkin():
-    data = request.json
-
-    user_id = data.get('user_id', str(uuid.uuid4()))
-    users[user_id] = {
-        'last_checkin': datetime.now(),
-        'port': data['port'],
-        'ip': request.remote_addr
-    }
-    return {'user_id': user_id}, 200
+DEFAULT_SERVER_PORT = 5000
 
 @app.route('/user/upload-metadata', methods=['POST'])
 def upload_metadata():
@@ -34,10 +19,8 @@ def upload_metadata():
             return { 'error': f'{field} is required' }, 400
         
     user_id = data['user_id']
-    if user_id not in users:
-        return {'error': 'User not found'}, 404
-    
-    file_id = str(uuid.uuid4())
+    file_id = str(uuid.uuid4())[:8] # Shorten UUID for simplicity for Demo
+
     files[file_id] = {
         'song_name': data['song_name'],
         'artist': data['artist'],
@@ -68,12 +51,10 @@ def search_files():
         if artist_match and song_match:
             available_users = []
             for user_id in file_to_users.get(file_id, []):
-                user = users.get(user_id)
-                if user and is_user_online(user):
-                    available_users.append({
-                        'ip_address': user['ip'],  
-                        'port': user['port']
-                    })
+                available_users.append({
+                    'ip_address': '127.0.0.1',  
+                    'port': 8080
+                })
             
             if available_users:
                 result = {
@@ -105,17 +86,12 @@ def get_download_info():
     if file_id not in files:
         return {'error': 'File not found'}, 404
     
-    for user_id in file_to_users.get(file_id, []):
-        user = users.get(user_id)
-        if user and is_user_online(user):
-            return {
-                'file_id': file_id,
-                'port': user['port'],
-                'user_ip': user['ip'],
-                'checksum': files[file_id]['checksum']  
-            }, 200
-    
-    return {'error': 'No online users have this file'}, 404
+    return {
+        'file_id': file_id,
+        'port': 8080,
+        'user_ip': '127.0.0.1',
+        'checksum': files[file_id]['checksum']  
+    }, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
