@@ -1,18 +1,10 @@
 import sys
-import logging
 
 from pyfiglet import Figlet
 
 from napster.core.singleton import UDP_IP, UDP_PORT, SingletonManager
 from napster.core.server import NapsterServer
 
-# Configure logging
-# Set to DEBUG to see all logs, INFO for important events, WARNING for issues only
-logging.basicConfig(
-    level=logging.INFO,  # Change to DEBUG for verbose output
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-    datefmt='%H:%M:%S'
-)
 
 from napster.commands.check_sharing import check_sharing
 from napster.commands.clear import clear
@@ -50,8 +42,7 @@ while True:
         case "sdl" | "shared_list":
             check_sharing()
         case "dl" | "download":
-            # Usage: download <ip> <port> <file-id> <filename> 
-            if len(command_input) < 4:
+            if len(command_input) < 5:
                 print("Usage: download <ip> <port> <file-id> <filename>")
                 print("Example: download 127.0.0.1 5005 abc-123 song.mp3")
             else:
