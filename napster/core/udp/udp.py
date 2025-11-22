@@ -103,7 +103,7 @@ class UDPClient:
 
     def __receive_message(self):
         def run():
-            print("UDP client receiver thread started")
+            # print("UDP client receiver thread started")
             while self.thread_kill_event.is_set() is False:
                 try:
                     data, addr = self.sock.recvfrom(MESSAGE_SIZE + 1024)
@@ -112,7 +112,7 @@ class UDPClient:
                         self.message_queue.append((self.converter.parse_message(message), addr))
                 except socket.error:
                     pass
-            print("UDP client receiver thread ended")
+            # print("UDP client receiver thread ended")
 
         thread = threading.Thread(target=run, daemon=True)
         thread.name = "UDPClientReceiverThread"

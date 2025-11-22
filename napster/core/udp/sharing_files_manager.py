@@ -12,19 +12,15 @@ class SharingFilesManager:
     def remove_client(self, client):
         self.db_manager.remove_sharing_table(client[0])
 
-    def __get_file_from_db(self, client):
-        downloading_client = self.db_manager.select_sharing_table(client[0]).fetchone()
-        if downloading_client is None:
-            return None
-
-        file = self.db_manager.select_shared_table(downloading_client[0], downloading_client[1]).fetchone()
+    def __get_file_from_db(self, uuid: str):
+        file = self.db_manager.select_shared_table(uuid).fetchone()
         if file is None:
             return None
 
         return file
 
-    def send_chunk(self, client, index: int):
-        file = self.__get_file_from_db(client)
+    def send_chunk(self, file_id: str, index: int):
+        file = self.__get_file_from_db(file_id)
         if file is None:
             return None
 
@@ -35,8 +31,8 @@ class SharingFilesManager:
 
         return mp3_file.get_chunk(index)
 
-    def get_metadata(self, client) -> dict | None:
-        file = self.__get_file_from_db(client)
+    def get_metadata(self, uuid:str) -> dict | None:
+        file = self.__get_file_from_db(uuid)
         if file is None:
             return None
 

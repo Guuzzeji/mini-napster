@@ -15,10 +15,10 @@ class NapsterClient(UDPClient):
         self.handle_downloads()
 
     def handle_message(self, message, addr):
-        print("(client) received message: %s from %s" % (message, addr))
+        # print("(client) received message: %s from %s" % (message, addr))
 
         if message[0] == "METADATA":
-            print("Received METADATA message")
+            # print("Received METADATA message")
             metadata = message[1]
             self.download_manager.add_file_metadata(
                 uuid=metadata.file_id,
@@ -40,13 +40,13 @@ class NapsterClient(UDPClient):
             )
 
             if self.download_manager.get_number_of_chunks_saved(data_msg.file_name) == self.download_manager.get_total_number_of_chunks(data_msg.file_name, data_msg.file_id):
-                print(f"File {data_msg.file_name} is complete")
+                # print(f"File {data_msg.file_name} is complete")
                 self.send_message(str(EndMsg(file_name=data_msg.file_name)))
                 self.download_manager.assemble_file(data_msg.file_name, data_msg.file_id)
 
-            if self.download_manager.get_total_number_of_chunks(data_msg.file_name, data_msg.file_id):
-                print(
-                    f"Received DATA message | chunk index: {message[1].chunk_index} out of {self.download_manager.get_number_of_chunks_saved(message[1].file_name)} / {self.download_manager.get_total_number_of_chunks(message[1].file_name, message[1].file_id)}")
+            # if self.download_manager.get_total_number_of_chunks(data_msg.file_name, data_msg.file_id):
+            #     print(
+            #         f"Received DATA message | chunk index: {message[1].chunk_index} out of {self.download_manager.get_number_of_chunks_saved(message[1].file_name)} / {self.download_manager.get_total_number_of_chunks(message[1].file_name, message[1].file_id)}")
 
     def download_file(self, file_name: str, file_id: str, checksum: str):
         self.send_message(
@@ -62,7 +62,7 @@ class NapsterClient(UDPClient):
 
     def handle_downloads(self):
         def process():
-            print("UDP client download handler thread started")
+            # print("UDP client download handler thread started")
             while self.thread_kill_event.is_set() is False:
                 manager = list(self.download_manager.manager.keys())
                 for file in manager:
@@ -77,7 +77,7 @@ class NapsterClient(UDPClient):
                                 self.send_message(str(DataWantMsg(chunk_index=chunk, file_name=file_name, file_id=file_id)))
                     except Exception as e:
                         continue
-            print("UDP client download handler thread ended")
+            # print("UDP client download handler thread ended")
 
         thread = threading.Thread(target=process, daemon=True)
         thread.name = "UDPClientDownloadHandlerThread"
