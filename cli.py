@@ -49,7 +49,7 @@ while True:
                 target_ip = command_input[1]
                 target_port = int(command_input[2])
                 file_id = command_input[3]
-                file_name = command_input[4]
+                file_name = command_input[4].replace("\"", "")
 
                 peer_key = (target_ip, target_port)
 
