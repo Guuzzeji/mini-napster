@@ -82,12 +82,12 @@ class DBManager:
             FROM shared;
         """)
     
-    def select_shared_table(self, uuid: str, file_name: str):
+    def select_shared_table(self, uuid: str):
         return self.__command_return(f"""
             SELECT uuid, file_checksum, file_name, full_file_path, total_chunks
             FROM shared
-            WHERE uuid = ? AND file_name = ?;
-        """, (uuid, file_name))
+            WHERE uuid = ?;
+        """, (uuid,))
 
     def insert_sharing_table(self, uuid: str, file_name: str, username: str, ttl: str, ip: str, port: int):
         self.__command_commit(f"""
@@ -106,9 +106,9 @@ class DBManager:
             FROM sharing;
         """)
 
-    def select_sharing_table(self, ip: str):
+    def select_sharing_table(self, uuid: str):
         return self.__command_return(f"""
-            SELECT uuid, file_name, username, ttl, ip, port
-            FROM sharing
-            WHERE ip = ?;
-        """, (ip,))
+            SELECT uuid, file_checksum, file_name, full_file_path, total_chunks
+            FROM shared
+            WHERE uuid = ?;
+        """, (uuid,))
