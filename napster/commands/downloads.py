@@ -25,4 +25,4 @@ def downloads():
 
         clean_table.append([file_name, progress_str, peer_str])
 
-    print_table(clean_table, ["File Name", "Progress", "Peer"], 50)
+    print_table(clean_table, 50)
