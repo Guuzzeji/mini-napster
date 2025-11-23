@@ -1,4 +1,8 @@
--e git+https://github.com/Guuzzeji/mini-napster@bbabbdca6637300b4f627c066e2266720adf58f3#egg=napster
+certifi==2025.11.12
+charset-normalizer==3.4.4
+idna==3.11
+-e git+https://github.com/Guuzzeji/mini-napster@1773db5cee4fc71de22a6d128ad70b952413828b#egg=napster
 pyfiglet==1.0.4
+requests==2.32.5
 tinytag==2.1.2
-Flask==2.3.3
+urllib3==2.5.0
