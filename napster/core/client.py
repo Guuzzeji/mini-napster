@@ -3,7 +3,6 @@ import threading
 
 from napster.core.udp.download_manager import DownloadManager
 from napster.core.udp.udp import UDPClient
-from napster.core.singleton import SingletonManager, UDP_IP, UDP_PORT
 from napster.core.udp.messages import WantMsg, EndMsg, DataWantMsg
 
 class NapsterClient(UDPClient):
