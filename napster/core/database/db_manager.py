@@ -71,6 +71,18 @@ class DBManager:
             INSERT OR IGNORE INTO shared (uuid, file_checksum, file_name, full_file_path, total_chunks) VALUES (?, ?, ?, ?, ?);
         """, (uuid, file_checksum, file_name, full_file_path, total_chunks))
 
+    def get_uuid_from_file_name(self, file_name: str) -> str | None:
+        """
+        Get uuid from file_name
+        """
+        result = self.__command_return(f"""
+            SELECT uuid FROM shared WHERE file_name = ?;
+        """, (file_name,))
+        result = result.fetchone()
+        if result is None or len(result) == 0:
+            return None
+        return result[0]
+
     def remove_shared_table(self, uuid: str):
         self.__command_commit(f"""
             DELETE FROM shared WHERE uuid = ?;
