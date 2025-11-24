@@ -3,7 +3,6 @@ from time import sleep
 
 from napster.core.udp.sharing_files_manager import SharingFilesManager
 from napster.core.udp.udp import UDPServer
-from napster.core.singleton import SingletonManager, UDP_IP, UDP_PORT
 from napster.core.udp.messages import DataMsg, MetadataMsg
 
 class NapsterServer(UDPServer):
