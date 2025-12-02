@@ -2,6 +2,7 @@ import sys
 
 from pyfiglet import Figlet
 
+from napster.commands.help import help_command
 from napster.commands.search_files import search_file
 from napster.core.singleton import SingletonManager
 from napster.core.constants import USERNAME, UDP_IP, UDP_PORT
@@ -49,7 +50,10 @@ while True:
             download_command(command_input, download_clients, USERNAME)
         case "dls" | "downloads":
             downloads()
+        case "help":
+            help_command()
         case "exit":
             break
         case _:
             print("Unknown command")
+            print("Type 'help' to see available commands")
