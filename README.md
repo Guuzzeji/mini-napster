@@ -25,7 +25,7 @@ The application is written in Python and uses the following libraries:
 
 1.  Clone the repository:
     ```sh
-    git clone https://github.com/Gabe-Torres/mini-napster.git
+    git clone https://github.com/Guuzzeji/mini-napster.git
     ```
 2.  Install the required packages:
     ```sh
