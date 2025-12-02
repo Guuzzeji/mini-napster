@@ -6,7 +6,7 @@
 
 # mini-napster
 
-A mini version of Napster, a P2P file-sharing application. This project is a final project for CS 356 at the University of Washington. It is a command-line application that allows users to search for and download files from other users on the same network. It uses a central tracker to keep track of all the files that are being shared and downloaded.
+A mini version of Napster, a P2P file-sharing application. This project is a final project for CS 386 at PLU. It is a command-line application that allows users to search for and download files from other users on the same network. It uses a central tracker to keep track of all the files that are being shared and downloaded.
 
 The application is written in Python and uses the following libraries:
 
