@@ -2,6 +2,8 @@
     <img src="./napster.gif" alt="mini-napster"/>
 </p>
 
+**Team: Gabe, Seven, Max**
+
 # mini-napster
 
 A mini version of Napster, a P2P file-sharing application. This project is a final project for CS 356 at the University of Washington. It is a command-line application that allows users to search for and download files from other users on the same network. It uses a central tracker to keep track of all the files that are being shared and downloaded.
@@ -12,6 +14,63 @@ The application is written in Python and uses the following libraries:
 - Requests for making HTTP requests to the tracker
 - Sqlite3 for the database operations for client-side tracking
 - Socket for UDP communication
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.13 or higher
+
+### Installation
+
+1.  Clone the repository:
+    ```sh
+    git clone https://github.com/Gabe-Torres/mini-napster.git
+    ```
+2.  Install the required packages:
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+## How to Run
+
+To run mini-napster, you need to start both the central tracker server and the client application.
+
+### 1. Run the Central Tracker
+
+The central tracker is a Flask server that keeps track of all the files being shared.
+
+```sh
+python nap-central-tracker/server.py
+```
+
+Default port is `3030`
+
+### 2. Run the Client
+
+The client is a command-line application that allows you to search for and download files.
+
+```sh
+python cli.py
+```
+
+Make sure to config your `config.txt` in the root of the `nap-data` folder.
+
+- `[USERNAME]` (optional): Your username. Defaults to a random username.
+- `[IP]` (optional): Your IP address. Defaults to `127.0.0.1` for localhost.
+- `[PORT]` (optional): The port to run the client on. Defaults to a random port.
+
+i.e what `config.txt` should look like:
+
+```txt
+anon
+127.0.0.1
+8080
+```
+
+## Sharing Files
+
+To share files, simply place your `.mp3` files in the `nap-data/sharing` directory. The application will automatically scan this directory and make the files available to other users. When a user requests to download a file from you, the application will automatically chunk the file and send it to the user.
 
 ## Project Overview
 
